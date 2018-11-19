@@ -49,7 +49,7 @@ class BlogController extends AbstractController
     }
 
     /**  
-     * Show all article from one category
+     * Show 3 articles from one category
      *  
      * @Route("/blog/category/{category}", name="blog_show_category")  
      * @return Response A response instance  
@@ -63,6 +63,25 @@ class BlogController extends AbstractController
         $articles = $this->getDoctrine()
             ->getRepository(Article::class)
             ->findBy(['category' => $categoryToPrint->getId()],['id' => 'DESC'],3);
+
+        return $this->render(  
+                'blog/category.html.twig',  
+                ['articles' => $articles]  
+        );  
+    }
+
+    /**  
+     * Show all articles from one category
+     *  
+     * @Route("/blog/category/{category}/all", name="blog_show_category_all")  
+     * @return Response A response instance  
+     */
+    public function showAllByCategory(string $category) : Response  
+    {  
+        $articles = $this->getDoctrine()
+            ->getRepository(Category::class)
+            ->findOneByName($category)
+            ->getArticles();
 
         return $this->render(  
                 'blog/category.html.twig',  
